@@ -1,0 +1,57 @@
+package com.ecommerce.ProductService.controller;
+
+import com.ecommerce.ProductService.entity.Category;
+import com.ecommerce.ProductService.entity.Product;
+import com.ecommerce.ProductService.entity.Subcategory;
+import com.ecommerce.ProductService.repository.SubCategoryRepo;
+import com.ecommerce.ProductService.service.CategoryService;
+import com.ecommerce.ProductService.service.ProductService;
+import com.ecommerce.ProductService.service.SubCategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("categories")
+public class CategoryController {
+@Autowired
+    CategoryService categoryService;
+@Autowired
+ProductService productService;
+@Autowired
+    SubCategoryService subCategoryService;
+@Autowired
+    SubCategoryRepo subCategoryRepo;
+
+@GetMapping()
+    public List<Category> getAllCategory(){
+    return categoryService.getAllCategory();
+}
+
+@GetMapping("{id}")
+    public Optional<Category> getCategoryById(@PathVariable Long id){
+
+    return categoryService.getCategoryByid(id);
+}
+
+@GetMapping("{categoryId}/subcategories")
+    public List<Subcategory> getSubcategoriesBycategoryid(@PathVariable Long categoryId){
+    return subCategoryRepo.findByCategoryId(categoryId);
+}
+//@GetMapping("{categoryId}/{subcategoryId}")
+//    public List<Product> getSubcategoryBycategoryIdAndsubcategoryId(@PathVariable Long categoryId, @PathVariable Long subcategoryId){
+//    return subCategoryService.findSubcategoryBycategoryIdAndSubcategoryId(categoryId, subcategoryId);
+//
+//}
+//@GetMapping("{categoryId}/{subcategoryId}/{productId}")
+//    public Optional<Product> getProductByCategoryIdAndSubcategoryIdAndProductId(@PathVariable Long categoryId, @PathVariable Long subcategoryId, @PathVariable Long productId){
+//
+//        return productService.getProductByCategoryIdAndSubcategoryIdAndProductId(categoryId, subcategoryId, productId);
+//}
+
+}
