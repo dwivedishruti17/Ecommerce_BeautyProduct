@@ -18,7 +18,7 @@ public class Address {
     public Long id;
 
     @NotBlank(message = "'street' is mandatory field")
-    public String street;
+    public String state;
 
     @NotBlank(message = "'area' is mandatory field")
     public String area;

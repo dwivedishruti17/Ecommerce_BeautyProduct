@@ -10,6 +10,7 @@ import com.ecommerce.UserService.enums.Role;
 import com.ecommerce.UserService.security.JwtHelper;
 import com.ecommerce.UserService.service.AddressService;
 import com.ecommerce.UserService.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +30,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = {"http://localhost:3001", "http://localhost:3000", "http://localhost:3002"})
 @RestController
 @RequestMapping("users")
 public class UserController {
@@ -56,15 +59,20 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
+        try {
+            Authentication authentication = manager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Long userId = userService.getUserIdByEmail(request.getEmail());
+            String token = helper.generateToken(userDetails, userId);
 
-        Authentication authentication = manager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = helper.generateToken(userDetails);
-
-        return ResponseEntity.ok(new JwtResponse(token, authentication.getName()));
+            return ResponseEntity.ok(new JwtResponse(token, authentication.getName()));
+        }
+        catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
 
     }
 
@@ -99,14 +107,18 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.ok("User deleted successfully");
     }
-    @PostMapping("/{userId}/address")
-    public ResponseEntity<Address> addAddress(@PathVariable Long userId, @RequestBody Address address) {
-        Address savedAddress = addressService.addAddress(userId, address);
+    @PostMapping("/address")
+    public ResponseEntity<Address> addAddress(HttpServletRequest request, @RequestBody Address address) {
+        String token = helper.extractToken(request);
+        Long LoggedInUserId = helper.extractUserId(token);
+        Address savedAddress = addressService.addAddress(LoggedInUserId, address);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAddress);
     }
-    @GetMapping("/{userId}/address")
-    public ResponseEntity<List<Address>> getUserAddresses(@PathVariable Long userId) {
-        List<Address> addresses = addressService.getUserAddresses(userId);
+    @GetMapping("/address")
+    public ResponseEntity<List<Address>> getUserAddresses(HttpServletRequest request) {
+        String token = helper.extractToken(request);
+        Long LoggedInUserId = helper.extractUserId(token);
+        List<Address> addresses = addressService.getUserAddresses(LoggedInUserId);
         return ResponseEntity.ok(addresses);
     }
     @DeleteMapping("/{userId}/address/{addressId}")
@@ -115,6 +127,22 @@ public class UserController {
                                                 @AuthenticationPrincipal UserDetails currentUser) {
         addressService.deleteAddress(userId, addressId, currentUser.getUsername());
         return ResponseEntity.ok("Address deleted successfully.");
+    }
+
+    @GetMapping("/{userId}/address/{addressId}")
+    public ResponseEntity<?> getUserAddressById(@PathVariable Long userId, @PathVariable Long addressId, @RequestHeader("Authorization") String token){
+
+       Address address =  addressService.getAddressbyUserIdAndAddressId(userId, addressId);
+       return ResponseEntity.ok().body(address);
+    }
+
+    @GetMapping("userdetails")
+    public ResponseEntity<?> getLoggedInUserdetaila(HttpServletRequest request){
+        String token = helper.extractToken(request);
+        Long LoggedInUserId = helper.extractUserId(token);
+        ResponseUserDto user = userService.getLoggedInUserDetail(LoggedInUserId);
+        return ResponseEntity.ok().body(user);
+
     }
 
 

@@ -3,6 +3,7 @@ package com.ecommerce.UserService.service;
 import com.ecommerce.UserService.Dto.RequestUserDto;
 import com.ecommerce.UserService.Dto.ResponseUserDto;
 import com.ecommerce.UserService.Entity.User;
+import com.ecommerce.UserService.exceptions.UserNotFoundException;
 import com.ecommerce.UserService.repository.UserRepository;
 import com.ecommerce.UserService.security.JwtHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,23 @@ public List<ResponseUserDto> findAllUsers() {
     public boolean exitsById(Long id){
         return userRepository.existsById(id);
     }
+    public Long getUserIdByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        return user.getId();
+    }
+
+    public ResponseUserDto getLoggedInUserDetail(Long id){
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return new ResponseUserDto(user.getId(), user.getName(), user.getEmail(), user.getAddresses());
+        } else {
+            // Handle the case where the user is not found
+            throw new UserNotFoundException("User not found with id: " + id);
+        }
+    }
+
 
 
 }
