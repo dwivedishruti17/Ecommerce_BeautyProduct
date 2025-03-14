@@ -4,7 +4,6 @@ import com.ecommerce.CartAndOrderService.Dto.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 @Service
 public class ProductServiceClient {
@@ -24,23 +23,26 @@ public class ProductServiceClient {
                 .bodyToMono(ProductDto.class)
                 .block();
     }
+    public ProductDto updateProductQuantity(Long productId, Integer quantity){
+        String url = "http://localhost:8080/products/" + productId+"/quantity";
+        return webClientBuilder.build()
+                .patch()
+                .uri(url)
+                .bodyValue(quantity)
+                .retrieve()
+                .bodyToMono(ProductDto.class)
+                .block();
+    }
 
-    public Double fetchProductprice(Long productId){
-        String url = "http://localhost:8080/products/" + productId;
-        return webClientBuilder.build()
-                .get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(Double.class)
-                .block();
-    }
-    public String fetchProductName(Long productId){
-        String url = "http://localhost:8080/products/" + productId;
-        return webClientBuilder.build()
-                .get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
+//    public boolean productexists(Long productId){
+//        String url = "http://localhost:8080/products/" + productId+"/exits";
+//        return Boolean.TRUE.equals(webClientBuilder.build()
+//                .get()
+//                .uri(url)
+//                .retrieve()
+//                .bodyToMono(Boolean.class)
+//                .block());
+//    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.ecommerce.CartAndOrderService.Dto;
 
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,12 +20,12 @@ public class Address {
         this.id = id;
     }
 
-    public String getStreet() {
-        return street;
+    public String getState() {
+        return state;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    public void setState(String street) {
+        this.state = street;
     }
 
     public String getArea() {
@@ -59,16 +60,16 @@ public class Address {
         this.phone = phone;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+//    public Long getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(Long userId) {
+//        this.userId = userId;
+//    }
 
     @NotBlank(message = "'street' is a mandatory field")
-    private String street;
+    private String state;
 
     @NotBlank(message = "'area' is a mandatory field")
     private String area;
@@ -76,8 +77,11 @@ public class Address {
     @NotBlank(message = "'city' is a mandatory field")
     private String city;
 
+    @Digits(message = "pincode must be a 6-digit number", integer = 6, fraction =0)
     private String pincode;
+
+    @Digits(message = "Phone number must be between 10-12 digits", integer = 12 , fraction = 0)
     private String phone;
 
-    private Long userId;
+//    private Long userId;
 }

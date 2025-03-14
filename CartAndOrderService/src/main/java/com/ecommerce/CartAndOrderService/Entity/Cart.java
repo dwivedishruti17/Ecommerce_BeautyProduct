@@ -1,6 +1,8 @@
 package com.ecommerce.CartAndOrderService.Entity;
 
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Generated;
@@ -19,6 +21,8 @@ public class Cart {
     @Id
     private String id;
     private Long userId;
+
+    @Valid
     private List<CartItem> items;
 
 }

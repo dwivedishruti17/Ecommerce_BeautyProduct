@@ -1,6 +1,7 @@
 package com.ecommerce.CartAndOrderService.Entity;
 
 
+import com.ecommerce.CartAndOrderService.Dto.Address;
 import com.ecommerce.CartAndOrderService.Enums.OrderStatus;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -18,8 +19,16 @@ public class Order {
     private Long userId;
     private List<OrderItem>items;
 
-    private double totalAmount;
+    public Address getAddress() {
+        return address;
+    }
 
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    private double totalAmount;
+    private Address address;
     public String getId() {
         return id;
     }
@@ -71,7 +80,4 @@ public class Order {
     private Date orderDate;
     private OrderStatus status; //make enum PENDING, COMPLETED, CANCELLED
 
-
-//    public Order(Long userId, List<OrderItem> orderItems, Double totalAmount, Date date, OrderStatus pending) {
-//    }
 }
