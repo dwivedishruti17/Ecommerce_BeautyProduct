@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = {"http://localhost:3001", "http://localhost:3000"})
 @RestController
 @RequestMapping("products")
 public class ProductController {
@@ -50,6 +51,7 @@ public class ProductController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id, @RequestHeader("Authorization") String token){
         String role = jwtValidator.extractRole(token.substring(7));
+
         if(!"ROLE_ADMIN".equals(role)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied! Only Admin can delete products.");
         }
@@ -58,14 +60,14 @@ public class ProductController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id, @Valid @RequestBody  ProductDTO productDTO, @RequestHeader("Authorization") String token){
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody  ProductDTO productDTO,  @RequestHeader("Authorization") String token){
         String role = jwtValidator.extractRole(token.substring(7));
         if(!"ROLE_ADMIN".equals(role)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied! Only Admin can update products.");
         }
         Product updatedProduct = productService.updateProduct(id, productDTO);
-         ResponseEntity.ok(updatedProduct);
-        return ResponseEntity.ok().body("product updated successfully!!");
+//         ResponseEntity.ok(updatedProduct);
+        return ResponseEntity.ok().body(updatedProduct);
 
     }
 
@@ -74,6 +76,17 @@ public class ProductController {
 public List<Product> getFilteredProducts(@RequestBody FilterDto filterDto) {
     return productService.getFilteredProducts(filterDto);
 }
+
+    @PatchMapping("{id}/quantity")
+    public ResponseEntity<?> updateProductQuantity(@PathVariable Long id, @RequestBody int quantity) {
+        Product updatedProduct = productService.updateProductQuantity(id, quantity);
+        return ResponseEntity.ok().body(updatedProduct);
+    }
+
+    @GetMapping("{id}/exits")
+    public Boolean productexists(@PathVariable Long id){
+        return productService.productexits(id);
+    }
 
 
 }

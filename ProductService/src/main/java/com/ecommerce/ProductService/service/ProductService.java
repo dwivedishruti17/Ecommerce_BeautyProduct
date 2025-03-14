@@ -1,10 +1,8 @@
 package com.ecommerce.ProductService.service;
 import com.ecommerce.ProductService.DTO.FilterDto;
 import com.ecommerce.ProductService.DTO.ProductDTO;
-import com.ecommerce.ProductService.entity.Category;
 import com.ecommerce.ProductService.entity.Product;
 import com.ecommerce.ProductService.entity.Subcategory;
-import com.ecommerce.ProductService.exception.CategoryNotFoundException;
 import com.ecommerce.ProductService.exception.ProductNotFoundException;
 import com.ecommerce.ProductService.exception.SubcategoryNotFoundException;
 import com.ecommerce.ProductService.repository.CategoryRepo;
@@ -13,13 +11,10 @@ import com.ecommerce.ProductService.repository.SubCategoryRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.AbstractMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -115,12 +110,6 @@ public class ProductService {
             existingProduct.setQuantity(productDTO.getQuantity());
         }
         if(productDTO.getSubcategoryName()!=null){
-//            Integer subcategoryId = SUBCATEGORY_MAP.get(productDTO.getSubcategoryName());
-//            System.out.println("subcategory ID : "+ subcategoryId);
-//            if(subcategoryId==null){
-//                throw  new SubcategoryNotFoundException("subcategory not found");
-//            }
-
             Subcategory subcategory = subCategoryRepo.findByName(productDTO.getSubcategoryName())
                     .orElseThrow(() -> new SubcategoryNotFoundException("Subcategory not found"));
 
@@ -143,6 +132,21 @@ public class ProductService {
         return productRepo.findFilteredProducts(minPrice, maxPrice, name, sort);
 
 
+    }
+
+    public Product updateProductQuantity(Long id, int quantity) {
+        Optional<Product> optionalProduct = productRepo.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setQuantity(quantity);
+            return productRepo.save(product);
+        } else {
+            throw new ProductNotFoundException("Product not found with id " + id);
+        }
+    }
+
+    public boolean productexits(Long productId){
+      return  productRepo.existsById(productId);
     }
 
 
