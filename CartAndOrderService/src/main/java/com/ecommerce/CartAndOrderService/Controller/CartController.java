@@ -24,6 +24,7 @@ import java.util.Optional;
 public class CartController {
     @Autowired
     private CartService cartService;
+
     @Autowired
     private JwtValidator jwtValidator;
 
@@ -73,5 +74,34 @@ public class CartController {
              return ResponseEntity.ok().body(cart);
 
     }
+
+    @PostMapping("/wishlist")
+    public ResponseEntity<?> addToWishList(@Valid  @RequestBody CartItem cartItem, HttpServletRequest request ) throws GeneralSecurityException {
+        Long loggedInuserId = jwtValidator.getuserIdFromToken(request);
+        System.out.println("loggedddd INNN USerrrrrr : "+ loggedInuserId);
+        CartDto cart = cartService.addtoWishlist(loggedInuserId, cartItem);
+        return ResponseEntity.ok().body(cart);
+    }
+
+    @DeleteMapping("/wishlist/product/{productId}")
+    public ResponseEntity<?> deleteWishListItem( @PathVariable Long productId,  HttpServletRequest request){
+        Long loggedInuserId = jwtValidator.getuserIdFromToken(request);
+        System.out.println("loggedddd INNN USerrrrrr : "+ loggedInuserId);
+        CartDto wishlist=  cartService.deleteWishListItem(loggedInuserId, productId);
+        return ResponseEntity.ok().body(wishlist);
+    }
+
+    @GetMapping("/wishlist")
+    public ResponseEntity<?> getUserWishList( HttpServletRequest request)
+    {
+        Long loggedInuserId = jwtValidator.getuserIdFromToken(request);
+        System.out.println("loggedddd INNN USerrrrrr : "+ loggedInuserId);
+        Optional<CartDto> wishlist = cartService.findWishListById(loggedInuserId);
+        if (wishlist.isEmpty()) {
+            throw new NotFoundException("cart is empty");
+        }
+        return ResponseEntity.ok().body(wishlist);
+    }
+
 
 }

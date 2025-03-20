@@ -1,6 +1,7 @@
 package com.ecommerce.UserService.Dto;
 
 import com.ecommerce.UserService.Entity.Address;
+import com.ecommerce.UserService.enums.Role;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,15 @@ public class ResponseUserDto {
         this.addresses = addresses;
     }
 
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @NotNull
     private Long userId;
     @NotNull
@@ -33,6 +43,7 @@ public class ResponseUserDto {
     @NotNull
     private String email;
     public List<Address> addresses;
+    private Role role;
 
     public String getName() {
         return name;

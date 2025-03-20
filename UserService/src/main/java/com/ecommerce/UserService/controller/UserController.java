@@ -1,11 +1,8 @@
 package com.ecommerce.UserService.controller;
 
-import com.ecommerce.UserService.Dto.RequestUserDto;
-import com.ecommerce.UserService.Dto.ResponseUserDto;
+import com.ecommerce.UserService.Dto.*;
 import com.ecommerce.UserService.Entity.Address;
 import com.ecommerce.UserService.Entity.User;
-import com.ecommerce.UserService.Dto.JwtRequest;
-import com.ecommerce.UserService.Dto.JwtResponse;
 import com.ecommerce.UserService.enums.Role;
 import com.ecommerce.UserService.security.JwtHelper;
 import com.ecommerce.UserService.service.AddressService;
@@ -121,11 +118,12 @@ public class UserController {
         List<Address> addresses = addressService.getUserAddresses(LoggedInUserId);
         return ResponseEntity.ok(addresses);
     }
-    @DeleteMapping("/{userId}/address/{addressId}")
-    public ResponseEntity<String> deleteAddress(@PathVariable Long userId,
-                                                @PathVariable Long addressId,
-                                                @AuthenticationPrincipal UserDetails currentUser) {
-        addressService.deleteAddress(userId, addressId, currentUser.getUsername());
+    @DeleteMapping("/address/{addressId}")
+    public ResponseEntity<String> deleteAddress(HttpServletRequest request,
+                                                @PathVariable Long addressId) {
+        String token = helper.extractToken(request);
+        Long LoggedInUserId = helper.extractUserId(token);
+        addressService.deleteAddress(LoggedInUserId, addressId);
         return ResponseEntity.ok("Address deleted successfully.");
     }
 
@@ -142,8 +140,15 @@ public class UserController {
         Long LoggedInUserId = helper.extractUserId(token);
         ResponseUserDto user = userService.getLoggedInUserDetail(LoggedInUserId);
         return ResponseEntity.ok().body(user);
-
     }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("{userId}/role")
+    public ResponseEntity<?> updateUserRole(@PathVariable  Long userId,@RequestBody RequestUserRoleDto userRoleDto){
+        ResponseUserDto user = userService.updateUserRole(userId, userRoleDto.getRole());
+        return ResponseEntity.ok().body(user);
+    }
+
 
 
 

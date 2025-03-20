@@ -37,6 +37,12 @@ public class OrderController {
         return orderService.getUserOrder(loggedInuserId);
     }
 
+    @GetMapping("/all")
+    public List<OrderDto> getAllorders(){
+        return orderService.getAllorder();
+    }
+
+
     @PutMapping("{orderId}/status")
     public OrderDto updateOrderStatus(@PathVariable String orderId, @RequestBody OrderStatusRequestDto orderStatus){
 //        String role = jwtValidator.extractRole(request);

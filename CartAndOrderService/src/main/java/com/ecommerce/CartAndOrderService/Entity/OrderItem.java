@@ -47,8 +47,16 @@ public class OrderItem {
     private Double price;
     private String description;
     private Integer quantity;
+    private String imageUrl;
 
-//    public OrderItem(Long productId, String productName, Double productPrice, String description, int quantity) {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    //    public OrderItem(Long productId, String productName, Double productPrice, String description, int quantity) {
 //
 //    }
 }

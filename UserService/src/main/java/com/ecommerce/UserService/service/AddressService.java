@@ -61,15 +61,9 @@ public class AddressService {
     }
 
 
-    public void deleteAddress(Long userId, Long addressId, String loggedInEmail) {
-        User loggedInUser = userRepository.findByEmail(loggedInEmail).
-                orElseThrow(()-> new UserNotFoundException("User not found"));
-
-        User targetUser = userRepository.findById(userId)
-                .orElseThrow(()-> new UserNotFoundException("user not found with userId"+userId));
-        if(!loggedInUser.getEmail().equals(targetUser.email)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to delete the address");
-        }
+    public void deleteAddress(Long userId, Long addressId) {
+//        User targetUser = userRepository.findById(userId)
+//                .orElseThrow(()-> new UserNotFoundException("user not found with userId"+userId));
 
         Address address = addressRepository.findById(addressId)
                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found"));
@@ -80,5 +74,5 @@ public class AddressService {
     }
     public Address getAddressbyUserIdAndAddressId(Long userId, Long addressId){
         return addressRepository.findAddressByUserIdAndAddressId(userId, addressId);
-}
+    }
 }

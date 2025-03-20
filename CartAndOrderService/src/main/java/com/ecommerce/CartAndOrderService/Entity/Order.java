@@ -70,14 +70,14 @@ public class Order {
     }
 
     public OrderStatus getStatus() {
-        return status;
+        return orderStatus;
     }
 
     public void setStatus(OrderStatus status) {
-        this.status = status;
+        this.orderStatus = status;
     }
 
     private Date orderDate;
-    private OrderStatus status; //make enum PENDING, COMPLETED, CANCELLED
+    private OrderStatus orderStatus; //make enum PENDING, COMPLETED, CANCELLED
 
 }

@@ -13,7 +13,6 @@ import java.util.List;
 public class CartDto {
     private String id;
 
-
     public String getId() {
         return id;
     }
@@ -29,8 +28,6 @@ public class CartDto {
     public void setItems(List<CartItem> items) {
         this.items = items;
     }
-
-
 
     private List<CartItem> items;
 }

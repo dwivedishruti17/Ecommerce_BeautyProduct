@@ -14,7 +14,16 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class OrderDto implements Serializable {
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     private String id;
+    private Long userId;
 
 //    public OrderDto(String id, Date orderDate, List<OrderItem> items, OrderStatus status, double totalAmount) {
 
@@ -59,12 +68,12 @@ public class OrderDto implements Serializable {
         this.orderDate = orderDate;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
+    public void setOrderStatus(OrderStatus status) {
+        this.orderStatus = status;
     }
 
     private Date orderDate;
@@ -77,6 +86,10 @@ public class OrderDto implements Serializable {
         this.address = address;
     }
 
-    private OrderStatus status;
+    private OrderStatus orderStatus;
+
+
     private Address address;
+
+
 }

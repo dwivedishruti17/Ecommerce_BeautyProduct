@@ -51,7 +51,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth->auth
 
-                        .requestMatchers("/users/register","/users/login","/address/add/**", "/products").permitAll()
+                        .requestMatchers("/users/register","/users/login","/address/add/**", "/products", "/cart/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/products").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/*").permitAll()
@@ -89,8 +89,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3001", "http://localhost:3000", "http://localhost:3002"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE" ,"PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

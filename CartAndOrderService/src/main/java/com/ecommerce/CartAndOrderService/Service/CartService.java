@@ -4,10 +4,14 @@ import com.ecommerce.CartAndOrderService.Dto.CartDto;
 import com.ecommerce.CartAndOrderService.Dto.ProductDto;
 import com.ecommerce.CartAndOrderService.Entity.Cart;
 import com.ecommerce.CartAndOrderService.Entity.CartItem;
+import com.ecommerce.CartAndOrderService.Entity.Wishlist;
+import com.ecommerce.CartAndOrderService.Exceptions.ItemAlreadyExists;
 import com.ecommerce.CartAndOrderService.Exceptions.ProductNotFoundException;
 import com.ecommerce.CartAndOrderService.Exceptions.ProductOutOfStockException;
 import com.ecommerce.CartAndOrderService.repository.CartRepository;
+import com.ecommerce.CartAndOrderService.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +23,8 @@ import java.util.stream.Collectors;
 public class CartService {
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private WishlistRepository wishlistRepository;
 
     @Autowired
     private ProductServiceClient productServiceClient;
@@ -54,7 +60,6 @@ public CartDto addtoCart(Long userId, CartItem cartItem){
         }
 
        Cart savedcart = cartRepository.save(cart);
-//        savedcart.setUserId(userId);
     System.out.println("savedcart : "+ savedcart);
     return convertToDto(savedcart);
 }
@@ -64,7 +69,6 @@ public CartDto addtoCart(Long userId, CartItem cartItem){
     Optional<CartDto> userCart =   cartRepository.findCartByUserId(userId).map(this::convertToDto);
         System.out.println("user cartttt: "+ userCart);
     return userCart;
-
     }
 
     public CartDto getCartByUserId(Long userId){
@@ -117,9 +121,59 @@ public CartDto addtoCart(Long userId, CartItem cartItem){
         return convertToDto(savedCart);
     }
 
+    public CartDto addtoWishlist(Long userId, CartItem cartItem){
+        try {
+            ProductDto product =  productServiceClient.getProductById(cartItem.getProductId());
+            cartItem.setDescription(product.getDescription());
+            cartItem.setName(product.getName());
+            cartItem.setImageUrl(product.getImageUrl());
+            cartItem.setPrice(product.getPrice());
+        } catch (Exception e) {
+            throw new ProductNotFoundException("Product with ID " + cartItem.getProductId() + " does not exist.");
+        }
+        if(cartItem.getQuantity()> productServiceClient.getProductById(cartItem.getProductId()).getQuantity()){
+            throw new ProductOutOfStockException("Product is out of stock");
+        }
+          Wishlist wishlist = wishlistRepository.findWishlistByUserId(userId).orElse(new Wishlist(null,  userId, new ArrayList<>()));
+        Optional<CartItem> exists = wishlist.getItems().stream()
+                .filter(item -> item.getProductId().equals(cartItem.getProductId())).findFirst();
+        if (exists.isPresent()) {
+           throw new ItemAlreadyExists("Item Already exist in wishList");
+        }
+        else{
+            wishlist.getItems().add(cartItem);
+        }
+
+        Wishlist savedlist = wishlistRepository.save(wishlist);
+        System.out.println("savedcart : "+ savedlist);
+        return convertToWishListDto(savedlist);
+    }
+    public CartDto deleteWishListItem(Long userId, Long productId){
+        try{
+            productServiceClient.getProductById(productId);
+        }
+        catch (Exception e){
+            throw new ProductNotFoundException("product with id :"+productId+" does not exist");
+        }
+        Wishlist wishlist = wishlistRepository.findWishlistByUserId(userId).orElseThrow(()-> new RuntimeException("cart not found"));
+        boolean itemExistsInCart = wishlist.getItems().stream()
+                .anyMatch(item -> item.getProductId().equals(productId));
+        if (!itemExistsInCart) {
+            throw new ProductNotFoundException("Product with id: " + productId + " is not found in your cart");
+        }
+        wishlist.getItems().removeIf(item -> item.getProductId().equals(productId));
+        Wishlist savedlist = wishlistRepository.save(wishlist);
+        return convertToWishListDto(savedlist);
+    }
+
     public Optional<CartDto> deleteCart(Long userId){
        Optional<Cart> cart =  cartRepository.deleteCartByUserId(userId);
        return cart.map(this::convertToDto);
+    }
+
+    public Optional<CartDto> findWishListById(Long userId){
+        Optional<CartDto> userCart =   wishlistRepository.findWishlistByUserId(userId).map(this::convertToWishListDto);
+        return userCart;
     }
 
     private CartDto convertToDto(Cart cart) {
@@ -127,6 +181,13 @@ public CartDto addtoCart(Long userId, CartItem cartItem){
                 cart.getId(),
                 cart.getItems()
 
+        );
+    }
+
+    private CartDto convertToWishListDto(Wishlist wishlist) {
+        return new CartDto(
+                wishlist.getId(),
+                wishlist.getItems()
         );
     }
 

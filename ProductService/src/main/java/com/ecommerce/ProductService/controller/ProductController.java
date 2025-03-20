@@ -23,10 +23,10 @@ public class ProductController {
  private ProductService productService;
     @Autowired
     private JwtValidator jwtValidator;
-    @GetMapping
-    public List<Product> getAllProduct(){
+    @PostMapping("/filter")
+    public List<Product> getAllProduct(@RequestBody FilterDto filterDto){
 
-        return productService.getAllProd();
+        return productService.getFilteredProducts(filterDto);
 
     }
     @GetMapping("{id}")
@@ -51,7 +51,6 @@ public class ProductController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id, @RequestHeader("Authorization") String token){
         String role = jwtValidator.extractRole(token.substring(7));
-
         if(!"ROLE_ADMIN".equals(role)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied! Only Admin can delete products.");
         }

@@ -14,8 +14,8 @@ public class CartItem {
    @NotNull(message = "productId is mandatory field")
    private Long productId;
 
-   @NotNull(message = "quantity is mandatory field")
-   @Min(value = 1 , message = "quantity must be greater than 0")
+//   @NotNull(message = "quantity is mandatory field")
+//   @Min(value = 1 , message = "quantity must be greater than 0")
    private int quantity;
 
 

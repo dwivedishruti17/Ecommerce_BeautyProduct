@@ -31,6 +31,15 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ItemAlreadyExists.class)
+    public ResponseEntity<ErrorResponse> handleItemAlreadyExistsException(ItemAlreadyExists ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(HttpStatus.CONFLICT.value());
+        errorResponse.setError("Conflict");
+        errorResponse.setMessage(ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();
@@ -80,18 +89,6 @@ public class GlobalExceptionHandler {
     }
 
 
-
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, WebRequest request) {
-//        ErrorResponse errorResponse = new ErrorResponse();
-//        errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-//        errorResponse.setError("Internal Server Error");
-//        errorResponse.setMessage(ex.getMessage());
-//        errorResponse.setPath(request.getDescription(false).substring(4));
-//        errorResponse.setTimestamp(new Date());
-//
-//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 
 
 

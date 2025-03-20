@@ -52,6 +52,7 @@ public class OrderService {
             String productName = productDto.getName();
             String description = productDto.getDescription();
             Integer quantity = productDto.getQuantity();
+            String imageUrl = productDto.getImageUrl();
 
             System.out.println("Fetched Product: " + productName + " | Price: " + productPrice + " | Desc: " + description);
             OrderItem orderItem = new OrderItem();
@@ -60,6 +61,8 @@ public class OrderService {
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setDescription(description);
             orderItem.setName(productName);
+            orderItem.setImageUrl(imageUrl);
+
             orderItems.add(orderItem);
 //            orderItems.add(new OrderItem(cartItem.getProductId(), productName, productPrice, description, cartItem.getQuantity()));
             System.out.println("quantityyy beforeee : "+ quantity);
@@ -82,7 +85,7 @@ public class OrderService {
         order.setItems(orderItems);
         order.setTotalAmount(totalAmount);
         order.setOrderDate(new Date());
-        order.setStatus(OrderStatus.PENDING);
+        order.setOrderStatus(OrderStatus.PENDING);
         order.setAddress(address);
         Order savedOrder = orderRepository.save(order);
         cartRepository.delete(cart);
@@ -124,7 +127,7 @@ public class OrderService {
         order.setItems(orderItems);
         order.setTotalAmount(totalAmount);
         order.setOrderDate(new Date());
-        order.setStatus(OrderStatus.PENDING);
+        order.setOrderStatus(OrderStatus.PENDING);
         order.setAddress(address);
         Order savedOrder = orderRepository.save(order);
         OrderDto orderDto = convertToDto(savedOrder);
@@ -140,6 +143,13 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public List<OrderDto> getAllorder(){
+        List<Order>orders = orderRepository.findAll();
+        return orders.stream()
+                .map(order -> convertToDto(order))
+                .collect(Collectors.toList());
+    }
+
     public OrderDto updateOrderStatus(String orderId, OrderStatus orderStatus){
         Optional<Order> optionalorder = orderRepository.findById(orderId);
         if(optionalorder.isPresent()){
@@ -148,7 +158,7 @@ public class OrderService {
                 updateProductQuantities(order);
 
             }
-            order.setStatus(orderStatus);
+            order.setOrderStatus(orderStatus);
             Order savedOrder =  orderRepository.save(order);
             return convertToDto(savedOrder);
         }
@@ -156,6 +166,8 @@ public class OrderService {
             throw new NotFoundException("Order not found with id : "+ orderId);
         }
     }
+
+//    public OrderDto getOrderById(String orderId, OrderStatus orderStatus)
 
     private void updateProductQuantities(Order order) {
         for (OrderItem item : order.getItems()) {
@@ -171,15 +183,17 @@ public class OrderService {
 
 
 
+
+
     private OrderDto convertToDto(Order order) {
         OrderDto dto = new OrderDto();
         dto.setId(order.getId());
+        dto.setUserId(order.getUserId());
         dto.setTotalAmount(order.getTotalAmount());
         dto.setOrderDate(order.getOrderDate());
-        dto.setStatus(order.getStatus());
         dto.setAddress(order.getAddress());
-
         dto.setItems(order.getItems());
+        dto.setOrderStatus(order.getOrderStatus());
         return dto;
     }
 
