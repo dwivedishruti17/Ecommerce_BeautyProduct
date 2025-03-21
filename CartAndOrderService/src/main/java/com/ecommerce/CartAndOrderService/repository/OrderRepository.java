@@ -13,7 +13,6 @@ import java.util.Optional;
 @EnableMongoRepositories
 public interface OrderRepository extends MongoRepository<Order, Long> {
     List<Order> findByUserId(Long userId);
-//    OrderDto save(OrderDto orderDto);
 @Query("{ '_id': ?0 }")
 Optional<Order> findById(String id);
 }

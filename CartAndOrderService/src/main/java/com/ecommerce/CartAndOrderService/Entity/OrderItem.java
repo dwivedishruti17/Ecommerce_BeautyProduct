@@ -56,7 +56,4 @@ public class OrderItem {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    //    public OrderItem(Long productId, String productName, Double productPrice, String description, int quantity) {
-//
-//    }
 }

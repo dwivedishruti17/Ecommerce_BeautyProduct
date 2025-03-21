@@ -11,15 +11,12 @@ import com.ecommerce.CartAndOrderService.Exceptions.ProductOutOfStockException;
 import com.ecommerce.CartAndOrderService.repository.CartRepository;
 import com.ecommerce.CartAndOrderService.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-//@RequiredArgsConstructor
 public class CartService {
     @Autowired
     private CartRepository cartRepository;
@@ -71,10 +68,6 @@ public CartDto addtoCart(Long userId, CartItem cartItem){
     return userCart;
     }
 
-    public CartDto getCartByUserId(Long userId){
-
-    return cartRepository.findCartByUserId(userId).map(this::convertToDto).orElseThrow(()->new RuntimeException("cart not found"));
-    }
 
     public CartDto updateCartItem(Long userId, CartItem cartItem){
     Cart cart = cartRepository.findCartByUserId(userId).orElseThrow(()-> new RuntimeException("cart not found"));

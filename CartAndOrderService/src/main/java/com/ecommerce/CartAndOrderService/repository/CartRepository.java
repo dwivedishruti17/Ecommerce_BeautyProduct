@@ -13,6 +13,4 @@ public interface CartRepository extends MongoRepository<Cart, Long> {
     Optional<Cart> findCartByUserId(Long userId);
     Optional<Cart> deleteCartByUserId(Long userId);
 
-//    CartDto save(CartDto cartDto);
-//    CartDto delete(CartDto cartDto);
 }

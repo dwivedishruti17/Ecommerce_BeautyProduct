@@ -11,5 +11,4 @@ import java.util.Optional;
 public interface WishlistRepository extends MongoRepository<Wishlist, Long> {
     Optional<Wishlist> findByUserId(Long id);
     Optional<Wishlist> findWishlistByUserId(Long id);
-//    Optional<Wishlist>
 }

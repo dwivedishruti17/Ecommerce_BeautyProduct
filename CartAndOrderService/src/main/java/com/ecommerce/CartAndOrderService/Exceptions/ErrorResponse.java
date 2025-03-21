@@ -33,19 +33,4 @@ public class ErrorResponse {
         this.message = message;
     }
 
-//    public String getPath() {
-//        return path;
-//    }
-
-//    public void setPath(String path) {
-//        this.path = path;
-//    }
-//
-//    public Date getTimestamp() {
-//        return timestamp;
-//    }
-//
-//    public void setTimestamp(Date timestamp) {
-//        this.timestamp = timestamp;
-//    }
 }

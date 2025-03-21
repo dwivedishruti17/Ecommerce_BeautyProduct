@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +63,6 @@ public class OrderService {
             orderItem.setImageUrl(imageUrl);
 
             orderItems.add(orderItem);
-//            orderItems.add(new OrderItem(cartItem.getProductId(), productName, productPrice, description, cartItem.getQuantity()));
             System.out.println("quantityyy beforeee : "+ quantity);
             Integer newquantity = quantity - cartItem.getQuantity();
             productDto.setQuantity(newquantity);
@@ -78,7 +76,6 @@ public class OrderService {
             throw new RuntimeException("User ID is null, order cannot be created.");
         }
         Address address = userServiceClient.getAddressByUserIdAndAddressId(userId, addressId, token);
-//        address.setUserId(userId);
         System.out.println("Addresss : "+ address);
         Order order = new Order();
         order.setUserId(userId);
@@ -167,8 +164,6 @@ public class OrderService {
         }
     }
 
-//    public OrderDto getOrderById(String orderId, OrderStatus orderStatus)
-
     private void updateProductQuantities(Order order) {
         for (OrderItem item : order.getItems()) {
             Optional<ProductDto> optionalProduct = Optional.ofNullable(productServiceClient.getProductById(item.getProductId()));
@@ -180,10 +175,6 @@ public class OrderService {
             }
         }
     }
-
-
-
-
 
     private OrderDto convertToDto(Order order) {
         OrderDto dto = new OrderDto();

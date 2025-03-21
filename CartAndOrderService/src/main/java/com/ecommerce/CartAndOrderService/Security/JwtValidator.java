@@ -18,7 +18,7 @@ public class JwtValidator {
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.get("userId", Long.class); // Extract userId from token
+        return claims.get("userId", Long.class);
     }
 
     private String extractToken(HttpServletRequest request) {
@@ -29,6 +29,5 @@ public class JwtValidator {
         return null;
     }
 
-//    private String extractRole(HttpServletRequest h)
 
 }
