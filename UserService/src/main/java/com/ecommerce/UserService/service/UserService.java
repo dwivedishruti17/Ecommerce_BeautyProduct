@@ -31,9 +31,6 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtHelper jwtHelper;
-
 
 
     public Optional<ResponseUserDto> findByEmail(String email){
@@ -84,7 +81,7 @@ public List<ResponseUserDto> findAllUsers() {
             User user = userOptional.get();
             return new ResponseUserDto(user.getId(), user.getName(), user.getEmail(), user.getAddresses(), user.getRole());
         } else {
-            // Handle the case where the user is not found
+
             throw new UserNotFoundException("User not found with id: " + id);
         }
     }

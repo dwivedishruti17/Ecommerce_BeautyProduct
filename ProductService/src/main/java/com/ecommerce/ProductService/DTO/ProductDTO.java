@@ -7,14 +7,12 @@ import jakarta.validation.constraints.Min;
 
 public class ProductDTO {
 
-//    @NotNull(message = "name cannot be null")
     @Size(min=2, message = "name should have atleast 2 character")
     private String name;
-//    @NotNull(message = "Description cannot be null")
+
 
     @Size(min = 2, message = "description should have atleast 2 character")
     private String description;
-//    @NotNull(message = "Price cannot be null")
     @Min(value = 1, message = "Price should be greater than 0")
     private Double price;
 

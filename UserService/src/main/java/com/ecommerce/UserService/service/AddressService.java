@@ -1,17 +1,13 @@
 package com.ecommerce.UserService.service;
 
-import com.ecommerce.UserService.Dto.ResponseUserDto;
 import com.ecommerce.UserService.Entity.Address;
 import com.ecommerce.UserService.Entity.User;
 import com.ecommerce.UserService.exceptions.ResourceNotFoundException;
-import com.ecommerce.UserService.exceptions.UserNotFoundException;
 import com.ecommerce.UserService.repository.AddressRepository;
 import com.ecommerce.UserService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -21,8 +17,6 @@ import java.util.List;
 public class AddressService {
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
-    @Autowired
-    private final UserService userService;
 
 
     public Address addAddress(Long userId, Address address) {
@@ -62,8 +56,6 @@ public class AddressService {
 
 
     public void deleteAddress(Long userId, Long addressId) {
-//        User targetUser = userRepository.findById(userId)
-//                .orElseThrow(()-> new UserNotFoundException("user not found with userId"+userId));
 
         Address address = addressRepository.findById(addressId)
                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found"));

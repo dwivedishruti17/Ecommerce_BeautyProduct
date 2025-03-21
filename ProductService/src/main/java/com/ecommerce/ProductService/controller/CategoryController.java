@@ -40,15 +40,6 @@ ProductService productService;
     public List<Subcategory> getSubcategoriesBycategoryid(@PathVariable Long categoryId){
     return subCategoryRepo.findByCategoryId(categoryId);
 }
-//@GetMapping("{categoryId}/{subcategoryId}")
-//    public List<Product> getSubcategoryBycategoryIdAndsubcategoryId(@PathVariable Long categoryId, @PathVariable Long subcategoryId){
-//    return subCategoryService.findSubcategoryBycategoryIdAndSubcategoryId(categoryId, subcategoryId);
-//
-//}
-//@GetMapping("{categoryId}/{subcategoryId}/{productId}")
-//    public Optional<Product> getProductByCategoryIdAndSubcategoryIdAndProductId(@PathVariable Long categoryId, @PathVariable Long subcategoryId, @PathVariable Long productId){
-//
-//        return productService.getProductByCategoryIdAndSubcategoryIdAndProductId(categoryId, subcategoryId, productId);
-//}
+
 
 }

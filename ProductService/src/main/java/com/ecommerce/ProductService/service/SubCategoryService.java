@@ -24,23 +24,4 @@ public class SubCategoryService {
         return Optional.ofNullable(subCategoryRepo.findById(subcategoryId).orElseThrow(() -> new SubcategoryNotFoundException("sucategory not found with id" + subcategoryId)));
     }
 
-//    public List<Subcategory> findSubcategoryBycategoryId(Long categoryId){
-//        return subCategoryRepo.findByCategoryId(categoryId);
-//    }
-
-//public Optional<Subcategory> findSubcategoryByCategoryIdAndSubcategoryId(Long categoryId, Long subcategoryId) {
-//    return Optional.ofNullable(subCategoryRepo.findByCategoryIdAndSubcategoryId(categoryId, subcategoryId));
-//}
-//    public List<Product> findSubcategoryBycategoryIdAndSubcategoryId(Long categoryId, Long subcategoryId){
-//        categoryRepo.findById(categoryId).orElseThrow(()-> new CategoryNotFoundException("category not found with id : "+ categoryId));
-//        subCategoryRepo.findById(subcategoryId).orElseThrow(()->new SubcategoryNotFoundException("Subcategory not found with id : "+ subcategoryId));
-//
-//
-//
-//        return subCategoryRepo.findByCategoryIdAndIdABC(categoryId,subcategoryId);
-//    }
-//    public List<Subcategory> findSubcategorybycategoryId(Long categoryId){
-//        categoryRepo.findById(categoryId).orElseThrow(()-> new CategoryNotFoundException("category not found with id:"+ categoryId));
-//        return subCategoryRepo.findByCategoryId(categoryId);
-//    }
 }

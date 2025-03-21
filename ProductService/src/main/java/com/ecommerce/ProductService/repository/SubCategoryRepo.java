@@ -17,9 +17,6 @@ public interface SubCategoryRepo extends JpaRepository<Subcategory, Long> {
 
     @Query("SELECT s from Subcategory s WHERE LOWER(s.name)=LOWER(:name) ")
     Optional<Subcategory> findByName(String name);
-//    @Query("SELECT p FROM Product p JOIN p.subcategory s JOIN s.category c WHERE s.id=?2 AND c.id=?1 ")
-    @Query("SELECT p FROM Product p WHERE p.subcategory.id = :subcategoryId AND p.subcategory.category.id = :categoryId")
-    List<Product> findByCategoryIdAndIdABC(@Param("categoryId") Long categoryId,@Param("subcategoryId") Long id);
 
 
 
