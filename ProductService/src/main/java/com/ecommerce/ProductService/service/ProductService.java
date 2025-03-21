@@ -130,8 +130,6 @@ public class ProductService {
 
         Sort sort = Sort.by(order.equalsIgnoreCase("desc") ? Sort.Order.desc(sortBy) : Sort.Order.asc(sortBy));
         return productRepo.findFilteredProducts(minPrice, maxPrice, name, sort);
-
-
     }
 
     public Product updateProductQuantity(Long id, int quantity) {

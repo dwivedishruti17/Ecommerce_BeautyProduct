@@ -51,6 +51,7 @@ public class ProductController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id, @RequestHeader("Authorization") String token){
         String role = jwtValidator.extractRole(token.substring(7));
+
         if(!"ROLE_ADMIN".equals(role)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied! Only Admin can delete products.");
         }
