@@ -37,12 +37,9 @@ public class ProductDTO {
 
     @Min(value = 1, message = "quantity should be greater than or equal to 1")
     private Integer quantity;
-//    @NotNull(message = "Subcategory ID cannot be null")
 
     private String subcategoryName;
-//    @Min(value= 1, message = "subcategoryId should be greater than or equal to 1")
-//    @Max(value = 5)
-//    private Long subcategoryId;
+
 
     public String getName() {
         return name;
@@ -76,11 +73,4 @@ public class ProductDTO {
         this.price = price;
     }
 
-//    public Long getSubcategoryId() {
-//        return subcategoryId;
-//    }
-//
-//    public void setSubcategoryId(Long subcategoryId) {
-//        this.subcategoryId = subcategoryId;
-//    }
 }
